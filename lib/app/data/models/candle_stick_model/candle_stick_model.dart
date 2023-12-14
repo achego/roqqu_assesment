@@ -36,7 +36,7 @@
 @JsonKey(name: 'l') String? l, 
 @JsonKey(name: 'v') String? v, 
 @JsonKey(name: 'n') int? n, 
-@JsonKey(name: 'x') bool? x, 
+@JsonKey(name: 'x') @Default(false) bool x, 
 @JsonKey(name: 'q') String? q, 
 @JsonKey(name: 'V') String? V, 
 @JsonKey(name: 'Q') String? Q, 

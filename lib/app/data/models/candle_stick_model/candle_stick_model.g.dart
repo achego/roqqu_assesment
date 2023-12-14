@@ -39,7 +39,7 @@ _$KModelImpl _$$KModelImplFromJson(Map<String, dynamic> json) => _$KModelImpl(
       l: json['l'] as String?,
       v: json['v'] as String?,
       n: json['n'] as int?,
-      x: json['x'] as bool?,
+      x: json['x'] as bool? ?? false,
       q: json['q'] as String?,
       V: json['V'] as String?,
       Q: json['Q'] as String?,

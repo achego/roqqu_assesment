@@ -288,7 +288,7 @@ mixin _$KModel {
   @JsonKey(name: 'n')
   int? get n => throw _privateConstructorUsedError;
   @JsonKey(name: 'x')
-  bool? get x => throw _privateConstructorUsedError;
+  bool get x => throw _privateConstructorUsedError;
   @JsonKey(name: 'q')
   String? get q => throw _privateConstructorUsedError;
   @JsonKey(name: 'V')
@@ -321,7 +321,7 @@ abstract class $KModelCopyWith<$Res> {
       @JsonKey(name: 'l') String? l,
       @JsonKey(name: 'v') String? v,
       @JsonKey(name: 'n') int? n,
-      @JsonKey(name: 'x') bool? x,
+      @JsonKey(name: 'x') bool x,
       @JsonKey(name: 'q') String? q,
       @JsonKey(name: 'V') String? V,
       @JsonKey(name: 'Q') String? Q,
@@ -353,7 +353,7 @@ class _$KModelCopyWithImpl<$Res, $Val extends KModel>
     Object? l = freezed,
     Object? v = freezed,
     Object? n = freezed,
-    Object? x = freezed,
+    Object? x = null,
     Object? q = freezed,
     Object? V = freezed,
     Object? Q = freezed,
@@ -408,10 +408,10 @@ class _$KModelCopyWithImpl<$Res, $Val extends KModel>
           ? _value.n
           : n // ignore: cast_nullable_to_non_nullable
               as int?,
-      x: freezed == x
+      x: null == x
           ? _value.x
           : x // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
       q: freezed == q
           ? _value.q
           : q // ignore: cast_nullable_to_non_nullable
@@ -452,7 +452,7 @@ abstract class _$$KModelImplCopyWith<$Res> implements $KModelCopyWith<$Res> {
       @JsonKey(name: 'l') String? l,
       @JsonKey(name: 'v') String? v,
       @JsonKey(name: 'n') int? n,
-      @JsonKey(name: 'x') bool? x,
+      @JsonKey(name: 'x') bool x,
       @JsonKey(name: 'q') String? q,
       @JsonKey(name: 'V') String? V,
       @JsonKey(name: 'Q') String? Q,
@@ -482,7 +482,7 @@ class __$$KModelImplCopyWithImpl<$Res>
     Object? l = freezed,
     Object? v = freezed,
     Object? n = freezed,
-    Object? x = freezed,
+    Object? x = null,
     Object? q = freezed,
     Object? V = freezed,
     Object? Q = freezed,
@@ -537,10 +537,10 @@ class __$$KModelImplCopyWithImpl<$Res>
           ? _value.n
           : n // ignore: cast_nullable_to_non_nullable
               as int?,
-      x: freezed == x
+      x: null == x
           ? _value.x
           : x // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
       q: freezed == q
           ? _value.q
           : q // ignore: cast_nullable_to_non_nullable
@@ -577,7 +577,7 @@ class _$KModelImpl with DiagnosticableTreeMixin implements _KModel {
       @JsonKey(name: 'l') this.l,
       @JsonKey(name: 'v') this.v,
       @JsonKey(name: 'n') this.n,
-      @JsonKey(name: 'x') this.x,
+      @JsonKey(name: 'x') this.x = false,
       @JsonKey(name: 'q') this.q,
       @JsonKey(name: 'V') this.V,
       @JsonKey(name: 'Q') this.Q,
@@ -624,7 +624,7 @@ class _$KModelImpl with DiagnosticableTreeMixin implements _KModel {
   final int? n;
   @override
   @JsonKey(name: 'x')
-  final bool? x;
+  final bool x;
   @override
   @JsonKey(name: 'q')
   final String? q;
@@ -724,7 +724,7 @@ abstract class _KModel implements KModel {
       @JsonKey(name: 'l') final String? l,
       @JsonKey(name: 'v') final String? v,
       @JsonKey(name: 'n') final int? n,
-      @JsonKey(name: 'x') final bool? x,
+      @JsonKey(name: 'x') final bool x,
       @JsonKey(name: 'q') final String? q,
       @JsonKey(name: 'V') final String? V,
       @JsonKey(name: 'Q') final String? Q,
@@ -770,7 +770,7 @@ abstract class _KModel implements KModel {
   int? get n;
   @override
   @JsonKey(name: 'x')
-  bool? get x;
+  bool get x;
   @override
   @JsonKey(name: 'q')
   String? get q;

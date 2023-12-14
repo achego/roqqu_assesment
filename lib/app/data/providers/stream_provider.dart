@@ -7,7 +7,7 @@ class StreamProvider {
   static WebSocketChannel getCandleLineStream(
       {String? intervalTime, String? symbol}) {
     final kline =
-        '${AppString.binanceWssBase}/ws/${symbol ?? 'btcusdt'}@kline_${intervalTime ?? '1m'}';
+        '${AppString.binanceWssBase}/ws/${symbol ?? 'btcusdt'}@kline_${intervalTime ?? '1s'}';
     logger('Connecting to', kline);
     WebSocketChannel channel = WebSocketChannel.connect(Uri.parse(kline));
     return channel;
