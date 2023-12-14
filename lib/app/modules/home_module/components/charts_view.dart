@@ -114,7 +114,7 @@ class ChartsView extends StatelessWidget {
                 // logger(snapshot, 'SnapShot', 3000);
                 if (!snapshot.hasData) {
                   return const SizedBox(
-                    height: 90,
+                    height: 50,
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }

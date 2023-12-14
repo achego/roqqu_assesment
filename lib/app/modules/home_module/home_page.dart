@@ -168,7 +168,7 @@ class HomePage extends StatelessWidget {
                                   physics: const NeverScrollableScrollPhysics(),
                                   children: [
                                     const ChartsView(),
-                                    OrderBookView(),
+                                    const OrderBookView(),
                                     Container()
                                   ]))
                         ],
