@@ -22,12 +22,13 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         builder: (context, child) {
           return AppThemeBuilder(builder: (context) {
-            final themeController = Get.put(ThemeController());
-            themeController.setInitialDarkMode();
+            final themeController = Get.put(ThemeController(), permanent: true);
+            // themeController.setInitialDarkMode();
             final isDark = themeController.isDarkTheme.value;
             return MaterialApp(
                 title: 'Roqqu Assesment',
                 theme: AppTheme(isDark: isDark).theme,
+                darkTheme: AppTheme(isDark: true).theme,
                 debugShowCheckedModeBanner: false,
                 home: const HomePage());
           });

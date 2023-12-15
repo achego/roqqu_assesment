@@ -34,9 +34,13 @@ class AppThemeBuilderState extends State<AppThemeBuilder> {
     logger('Brifhness Has Chabed');
     // setState(() {
     // Update the current brightness when the system theme changes
+    logger(
+        SchedulerBinding.instance.window.platformBrightness, 'The Brightness');
     themeController.isDarkTheme.value =
         SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
     // });
+
+    logger(themeController.isDarkTheme.value, 'Is it dark form here');
     rebuild();
   }
 

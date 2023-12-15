@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:roqqu_assesment/core/theme/theme_controller.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/app_images.dart';
@@ -13,16 +15,23 @@ class CustomAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Get.find<ThemeController>().isDarkTheme.value;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.w),
-      color: AppColors.white,
+      color: AppColors().whiteR,
       child: Row(
         children: [
           Row(
             children: [
-              fittedSize(34, 20, child: SvgPicture.asset(AppIconSvgs.logo)),
+              fittedSize(34, 20,
+                  child: SvgPicture.asset(
+                    AppIconSvgs.logo,
+                    color: isDark ? AppColors.white : null,
+                  )),
               spacew(10),
-              fittedSize(20, 90, child: SvgPicture.asset(AppIconSvgs.brandName))
+              fittedSize(20, 90,
+                  child: SvgPicture.asset(AppIconSvgs.brandName,
+                      color: isDark ? AppColors.white : null))
             ],
           ),
           spacew(10),

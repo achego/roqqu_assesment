@@ -24,7 +24,7 @@ class TextStyles {
   }) {
     final double fontSize = 14.sp;
     return TextStyle(
-      color: color ?? AppColors.textDark,
+      color: color ?? AppColors().textDarkR,
       fontSize: fontSizeDiff != null ? fontSize + fontSizeDiff.sp : fontSize,
       fontWeight: fontWeight ?? FontWeight.w500,
       overflow: overflow,

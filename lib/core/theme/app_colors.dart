@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:roqqu_assesment/core/utils/logger.dart';
 import 'theme_controller.dart';
 
 class AppThemeColor {
@@ -9,9 +10,14 @@ class AppThemeColor {
 
 class AppColors {
   // Theme Colors
-  final isDark = Get.put(ThemeController()).isDarkTheme.value;
+  
+  final isDark = Get.find<ThemeController>().isDarkTheme.value;
 
-  Color get primaryR => isDark ? AppColorsDark.primary : primary;
+  // Color get primaryR => isDark ? AppColorsDark.primary : primary;
+  Color get whiteR => isDark ? AppColorsDark.white : white;
+  Color get textDarkR => isDark ? AppColorsDark.textDark : textDark;
+  Color get backgroundR => isDark ? AppColorsDark.background : background;
+  
 
   // Static Colors
   static const Color background = Color.fromRGBO(241, 241, 241, 1);
@@ -44,15 +50,11 @@ class AppColors {
 }
 
 class AppColorsDark {
-  static const Color background = Color.fromRGBO(2, 39, 43, 1);
+  static const Color background = Color.fromRGBO(28, 33, 39, 1);
   static const Color statusBar = Color.fromRGBO(13, 27, 19, 0.07);
-  static const Color primary = Color.fromRGBO(0, 160, 173, 1);
-  static const Color primary40 = Color.fromRGBO(214, 252, 255, 1);
-  static const Color gray40 = Colors.white;
-  static const Color gray30 = Color.fromRGBO(160, 171, 187, 1);
   static const Color ghostText = Color.fromRGBO(160, 171, 187, 1);
-  static const Color darkText = Color.fromRGBO(231, 234, 238, 1);
+  static const Color textDark = AppColors.white;
   static const Color headingDark = Color.fromRGBO(231, 234, 238, 1);
   static const Color error = Color.fromRGBO(239, 68, 68, 1);
-  static const Color white = Color.fromRGBO(0, 51, 56, 1);
+  static const Color white = Color.fromRGBO(23, 24, 27, 1);
 }

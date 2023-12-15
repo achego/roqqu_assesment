@@ -15,7 +15,7 @@ class PaddedContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
-        color: AppColors.white,
+        color: AppColors().whiteR,
         child: child);
   }
 }

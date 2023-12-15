@@ -10,6 +10,7 @@ import 'package:roqqu_assesment/app/modules/home_module/components/charts_view_c
 import 'package:roqqu_assesment/app/modules/home_module/components/mock_data.dart';
 import 'package:roqqu_assesment/app/modules/home_module/home_controller.dart';
 import 'package:roqqu_assesment/core/theme/app_colors.dart';
+import 'package:roqqu_assesment/core/utils/app_extensions.dart';
 import 'package:roqqu_assesment/core/utils/logger.dart';
 
 import '../../../../core/utils/app_images.dart';
@@ -17,6 +18,9 @@ import '../../../../core/utils/app_styles.dart';
 import 'package:interactive_chart/interactive_chart.dart';
 
 import '../../../components/functions/global/globals.dart';
+import 'package:candlesticks/candlesticks.dart';
+import 'package:k_chart/chart_translations.dart';
+import 'package:k_chart/flutter_k_chart.dart' as k;
 
 class ChartsView extends StatelessWidget {
   const ChartsView({
@@ -28,6 +32,28 @@ class ChartsView extends StatelessWidget {
     List<CandleData> _data = MockDataTesla.candles;
     final controller = Get.put(ChartsViewController());
     final homeCotroller = Get.put(HomeController());
+
+    k.ChartStyle chartStyle = k.ChartStyle()
+      ..candleWidth = 5
+      ..candleLineWidth = 0.7
+      ..gridColumns = 5
+      ..gridRows = 5
+      ..dateTimeFormat = ['HH', ':', 'ss'];
+    k.ChartColors chartColors = k.ChartColors()
+      ..bgColor = [
+        AppColors().whiteR,
+        AppColors().whiteR,
+      ]
+      // ..crossTextColor = AppColors.textLight
+      ..deaColor = Colors.transparent
+      ..difColor = Colors.transparent
+      ..gridColor = Colors.transparent
+      ..volColor = AppColors.textLight
+      ..vCrossColor = AppColors.textLight
+      ..ma10Color = Colors.transparent
+      ..ma30Color = Colors.transparent
+      ..ma5Color = Colors.transparent
+      ..macdColor = Colors.transparent;
     // bool _darkMode = true;
     // bool _showAverage = false;
     return SizedBox(
@@ -35,8 +61,9 @@ class ChartsView extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 40.h,
+            height: 33.h,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
+            // color: Colors.red,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +81,7 @@ class ChartsView extends StatelessWidget {
                       final time = controller.times[index];
                       return InkWell(
                         onTap: () {
-                          controller.selectedTimeLine.value = time;
+                          controller.changeTime(time);
                         },
                         child: Obx(
                           () {
@@ -69,9 +96,10 @@ class ChartsView extends StatelessWidget {
                                       : null,
                                   borderRadius: BorderRadius.circular(100)),
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              margin: EdgeInsets.only(left: 10.w),
                               child: Text(
-                                time.capitalize ?? "",
+                                time.toUpperCase(),
                                 style: TextStyles.text(
                                     fontSizeDiff: 1,
                                     color: isActive
@@ -85,11 +113,45 @@ class ChartsView extends StatelessWidget {
                     },
                   ),
                 ),
+                spacew(10),
+                Container(
+                  width: 50.w,
+                  alignment: Alignment.center,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Obx(
+                        () => GestureDetector(
+                          onTap: () {
+                            controller.isLineChart.toggle();
+                          },
+                          child: square(20,
+                              child: SvgPicture.asset(
+                                AppIconSvgs.chart,
+                                color: controller.isLineChart.value
+                                    ? null
+                                    : Colors.red,
+                              )),
+                        ),
+                      ),
+                      spacew(15),
+                      Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'FX',
+                          style: TextStyles.text(fontSizeDiff: 1),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
           spaceh(18),
-          const Divider(),
+          Divider(
+            color: AppColors.textLight.withOpacity(0.1),
+          ),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -97,129 +159,219 @@ class ChartsView extends StatelessWidget {
               child: square(20, child: SvgPicture.asset(AppIconSvgs.expand)),
             ),
           ),
-          const Divider(),
+          Divider(
+            color: AppColors.textLight.withOpacity(0.1),
+          ),
           Expanded(
-            child: StreamBuilder(
-              stream: StreamProvider.getCandleLineStream().stream,
-              builder: (context, snapshot) {
-                // logger(snapshot);
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'An Error occured getting stream',
-                      style: TextStyles.text(),
-                    ),
-                  );
-                }
-                // logger(snapshot, 'SnapShot', 3000);
-                if (!snapshot.hasData) {
-                  return const SizedBox(
-                    height: 50,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-                if (snapshot.hasData) {
-                  // logger(snapshot.data, 'The Snapshot data');
-                  // logger(snapshot.data.runtimeType, 'The Snapshot data');
-
-                  final snap =
-                      CandleStickModel.fromJson(jsonDecode(snapshot.data));
-                  final snapData = snap.k ?? const KModel();
-                  // homeCotroller.currentPrice.value = snapData.c ?? '';
-
-                  final candleData = CandleData(
-                    timestamp: snapData.t ?? 0,
-                    open: double.tryParse(snapData.o ?? "") ?? 0.0,
-                    close: double.tryParse(snapData.c ?? "") ?? 0.0,
-                    volume: double.tryParse(snapData.v ?? "") ?? 0.0,
-                    high: double.tryParse(snapData.h ?? "") ?? 0.0,
-                    low: double.tryParse(snapData.l ?? "") ?? 0.0,
-                  );
-                  if (controller.isFirstTime.value) {
-                    controller.data.add(candleData);
-                    controller.data.add(candleData);
-                    controller.data.add(candleData);
-                    controller.isFirstTime.value = false;
-                  }
-                  if (!snapData.x) {
-                    final prevCandle = controller.data.last;
-                    controller.data.remove(prevCandle);
-                    controller.data.add(candleData);
-                    logger(controller.data, 'The data', 10000);
-                  }
-                  if (snapData.x) {
-                    // final candleData =
-                    //     CandleData(timestamp: 0, open: 0.0, close: 0.0, volume: 0.0);
-                    controller.data.add(candleData);
-                    logger(controller.data, 'The data', 10000);
-                  }
-                }
-                return Obx(
-                  () {
-                    // logger('here', '===============================');
-                    return controller.data.length < 3
-                        ? const SizedBox.shrink()
-                        : Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: InteractiveChart(
-                              // initialVisibleCandleCount: 0,
-                          
-                              candles: controller.data,
-                              /** Example styling */
-                              style: ChartStyle(
-                          
-                                // priceGainColor: Colors.teal[200]!,
-                                // priceLossColor: Colors.blueGrey,
-                                // volumeColor: Colors.teal.withOpacity(0.8),
-                                // trendLineStyles: [
-                                //   Paint()
-                                //     ..strokeWidth = 2.0
-                                //     ..strokeCap = StrokeCap.round
-                                //     ..color = Colors.deepOrange,
-                                //   Paint()
-                                //     ..strokeWidth = 4.0
-                                //     ..strokeCap = StrokeCap.round
-                                //     ..color = Colors.orange,
-                                // ],
-                                // priceGridLineColor: Colors.blue[200]!,
-                                // priceLabelStyle: TextStyle(color: Colors.blue[200]),
-                                // timeLabelStyle: TextStyle(color: Colors.blue[200]),
-                                selectionHighlightColor:
-                                    Colors.red.withOpacity(0.2),
-                                overlayBackgroundColor:
-                                    Colors.red[900]!.withOpacity(0.6),
-                                overlayTextStyle:
-                                    TextStyle(color: Colors.red[100]),
-                                timeLabelHeight: 32,
-                                volumeHeightFactor:
-                                    0.2, // volume area is 20% of total height
-                              ),
-                              /** Customize axis labels */
-                              timeLabel: (timestamp, visibleDataCount) =>
-                                  "${timestamp.round()}",
-                              priceLabel: (price) => "${price.round()}",
-
-                              /** Customize overlay (tap and hold to see it)
-                                         ** Or return an empty object to disable overlay info. */
-                              overlayInfo: (candle) => {
-                                "💎": "🤚    ",
-                                "Hi": "${candle.high?.toStringAsFixed(2)}",
-                                "Lo": "${candle.low?.toStringAsFixed(2)}",
-                              },
-                              /** Callbacks */
-                              onTap: (candle) =>
-                                  logger("user tapped on $candle"),
-                              onCandleResize: (width) =>
-                                  logger("each candle is $width wide"),
+            child: Obx(
+              () => controller.isLoading.value
+                  ? _buildLoading()
+                  : StreamBuilder(
+                      stream: StreamProvider.getCandleLineStream(
+                              intervalTime: controller.selectedTimeLine.value)
+                          .stream,
+                      builder: (context, snapshot) {
+                        // logger(snapshot);
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              'An Error occured starting stream',
+                              style: TextStyles.text(),
                             ),
                           );
-                  },
-                );
-              },
+                        }
+                        if (!snapshot.hasData && controller.data.isEmpty) {
+                          return _buildLoading();
+                        }
+                        if (snapshot.hasData || controller.data.isNotEmpty) {
+                          if (snapshot.hasData) {
+                            controller.addCandleData(snapshot);
+                          }
+                          final snap =
+                      CandleStickModel.fromJson(
+                              jsonDecode(snapshot.data ?? '{}'));
+                          final snapData = snap.k ?? const KModel();
+                        
+                          return Obx(
+                            () {
+                              // logger('here', '===============================');
+                              return controller.data.length < 3
+                                  ? const SizedBox.shrink() 
+                                  : Container(
+                                      height: 350.h,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w),
+                                      child: Stack(
+                                        children: [
+                                          k.KChartWidget(
+                                            controller.data,
+                                            chartStyle,
+                                            chartColors,
+                                            isLine:
+                                                controller.isLineChart.value,
+                                            isTrendLine: false,
+                                                      
+                                                                      
+                                          ),
+                                          Positioned(
+                                            top: 0,
+                                            child: Container(
+                                              height: 30,
+                                              alignment: Alignment.center,
+                                              child: SingleChildScrollView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                child: Row(
+                                                  children: [
+                                                    square(20,
+                                                        child: SvgPicture.asset(
+                                                            AppIconSvgs
+                                                                .borderdCarat)),
+                                                    spacew(16),
+                                                    Text(
+                                                      'BTC/USD',
+                                                      style: TextStyles.text(
+                                                          fontSizeDiff: -4),
+                                                    ),
+                                                    spacew(16),
+                                                    _buildTextAndValue(
+                                                        'O',
+                                                        (double.tryParse(
+                                                                    snapData.o ??
+                                                                        '') ??
+                                                                0)
+                                                            .formatMoney),
+                                                    spacew(16),
+                                                    _buildTextAndValue(
+                                                        'H',
+                                                        (double.tryParse(
+                                                                    snapData.h ??
+                                                                        '') ??
+                                                                0)
+                                                            .formatMoney),
+                                                    spacew(16),
+                                                    _buildTextAndValue(
+                                                        'L',
+                                                        (double.tryParse(
+                                                                    snapData.l ??
+                                                                        '') ??
+                                                                0)
+                                                            .formatMoney),
+                                                    spacew(16),
+
+                                                    _buildTextAndValue(
+                                                        'C',
+                                                        (double.tryParse(
+                                                                    snapData.c ??
+                                                                        '') ??
+                                                                0)
+                                                            .formatMoney),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+              
+              
+              
+                                      // Candlesticks(
+                                      //   candles: controller.data,
+
+                                      //   onLoadMoreCandles: () async {
+
+                                      //   },
+                                      // )
+
+                                      // InteractiveChart(
+                                      //   // initialVisibleCandleCount: 0,
+
+                                      //   candles: controller.data,
+                                      //   /** Example styling */
+                                      //   style: ChartStyle(
+
+                                      //     // priceGainColor: Colors.teal[200]!,
+                                      //     // priceLossColor: Colors.blueGrey,
+                                      //     // volumeColor: Colors.teal.withOpacity(0.8),
+                                      //     // trendLineStyles: [
+                                      //     //   Paint()
+                                      //     //     ..strokeWidth = 2.0
+                                      //     //     ..strokeCap = StrokeCap.round
+                                      //     //     ..color = Colors.deepOrange,
+                                      //     //   Paint()
+                                      //     //     ..strokeWidth = 4.0
+                                      //     //     ..strokeCap = StrokeCap.round
+                                      //     //     ..color = Colors.orange,
+                                      //     // ],
+                                      //     // priceGridLineColor: Colors.blue[200]!,
+                                      //     // priceLabelStyle: TextStyle(color: Colors.blue[200]),
+                                      //     // timeLabelStyle: TextStyle(color: Colors.blue[200]),
+                                      //     selectionHighlightColor:
+                                      //         Colors.red.withOpacity(0.2),
+                                      //     overlayBackgroundColor:
+                                      //         Colors.red[900]!.withOpacity(0.6),
+                                      //     overlayTextStyle:
+                                      //         TextStyle(color: Colors.red[100]),
+                                      //     timeLabelHeight: 32,
+                                      //     volumeHeightFactor:
+                                      //         0.2, // volume area is 20% of total height
+                                      //   ),
+                                      //   /** Customize axis labels */
+                                      //   timeLabel: (timestamp, visibleDataCount) =>
+                                      //       "${timestamp.round()}",
+                                      //   priceLabel: (price) => "${price.round()}",
+
+                                      //   /** Customize overlay (tap and hold to see it)
+                                      //              ** Or return an empty object to disable overlay info. */
+                                      //   overlayInfo: (candle) => {
+                                      //     "💎": "🤚    ",
+                                      //     "Hi": "${candle.high?.toStringAsFixed(2)}",
+                                      //     "Lo": "${candle.low?.toStringAsFixed(2)}",
+                                      //   },
+                                      //   /** Callbacks */
+                                      //   onTap: (candle) =>
+                                      //       logger("user tapped on $candle"),
+                                      //   onCandleResize: (width) =>
+                                      //       logger("each candle is $width wide"),
+                                      // ),
+                            
+                                    );
+                            },
+                          );
+                        }
+                        return _buildLoading();
+                      },
+                       
+                    ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Row _buildTextAndValue(String text, String value) => Row(
+        children: [
+          Text(
+            text,
+            style: TextStyles.text(fontSizeDiff: -4),
+          ),
+          spacew(5),
+          Text(
+            value,
+            style: TextStyles.text(fontSizeDiff: -4, color: AppColors.green),
+          )
+        ],
+      );
+
+  SizedBox _buildLoading() {
+    return const SizedBox(
+      height: 50,
+      child: Center(
+          child: CircularProgressIndicator(
+        color: AppColors.green,
+      )),
     );
   }
 }

@@ -24,5 +24,7 @@ class AppIconSvgs {
   static final String usdt = 'usdt'.svg;
   static final String carratDown = 'carrat_down'.svg;
   static final String expand = 'expand'.svg;
+  static final String chart = 'chart'.svg;
+  static final String borderdCarat = 'borderd_carat'.svg;
 }
 
